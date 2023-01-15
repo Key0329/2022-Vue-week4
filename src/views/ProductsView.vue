@@ -47,6 +47,10 @@
         </tr>
       </tbody>
     </table>
+    <PaginationComponent
+      :pages="pages"
+      @get-products-data="getProductsData"
+    ></PaginationComponent>
   </div>
 
   <!-- Modal start-->
@@ -309,6 +313,7 @@
 
 <script>
 import modal from 'bootstrap/js/dist/modal'
+import PaginationComponent from '../components/PaginationComponent.vue'
 
 let productModal = null
 let delProductModal = null
@@ -322,8 +327,12 @@ export default {
       tempProduct: {
         imagesUrl: []
       },
-      isNew: false
+      isNew: false,
+      pages: {}
     }
+  },
+  components: {
+    PaginationComponent
   },
   mounted() {
     const token = document.cookie.replace(
@@ -343,22 +352,23 @@ export default {
       this.$http
         .post(`${this.apiUrl}/api/user/check`)
         .then(() => {
-          this.getData()
+          this.getProductsData()
         })
         .catch((err) => {
           alert(err.data.message)
           window.location = 'login.html'
         })
     },
-    getData() {
+    getProductsData(page = 1) {
       this.$http
-        .get(`${this.apiUrl}/api/${this.apiPath}/admin/products`)
+        .get(`${this.apiUrl}/api/${this.apiPath}/admin/products?page=${page}`)
         .then((res) => {
           this.products = res.data.products
-          console.log(this.products)
+          this.pages = res.data.pagination
+          console.log(this.pages)
         })
         .catch((err) => {
-          alert(err.data.message)
+          alert(err)
         })
     },
     modelHandler(button, item) {
@@ -406,7 +416,7 @@ export default {
           .post(`${this.apiUrl}/api/${this.apiPath}/admin/product`, { data })
           .then((res) => {
             alert(res.data.message)
-            this.getData()
+            this.getProductsData()
             productModal.hide()
           })
           .catch((err) => {
@@ -435,7 +445,7 @@ export default {
           })
           .then((res) => {
             alert(res.data.message)
-            this.getData()
+            this.getProductsData()
             productModal.hide()
           })
           .catch((err) => {
@@ -466,7 +476,7 @@ export default {
       //   .then((res) => {
       //     alert(res.data.message);
       //     productModal.hide();
-      //     this.getData();
+      //     this.getProductsData();
       //   })
       //   .catch((err) => {
       //     alert(err.data.message);
@@ -478,7 +488,7 @@ export default {
         .delete(`${this.apiUrl}/api/${this.apiPath}/admin/product/${id}`)
         .then((res) => {
           alert(res.data.message)
-          this.getData()
+          this.getProductsData()
           delProductModal.hide()
         })
         .catch((err) => {
