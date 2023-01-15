@@ -28,5 +28,6 @@ module.exports = {
     'vue'
   ],
   rules: {
+    'space-before-function-paren': ['error', 'never']
   }
 }

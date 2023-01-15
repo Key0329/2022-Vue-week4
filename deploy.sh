@@ -25,6 +25,6 @@ git commit -m 'deploy'
 
 # if you are deploying to https://key0329.github.io/vite-test
 # git push -f git@github.com:key0329/vite-test.git main:gh-pages
-git push -f https://github.com/Key0329/vite-test.git main:gh-pages
+git push -f https://github.com/Key0329/2022-Vue-week4.git main:gh-pages
 
 cd -
