@@ -53,15 +53,13 @@ export default {
       this.$http
         .post(`${this.apiUrl}/admin/signin`, this.user)
         .then((res) => {
-          // console.log(res);
           const { token, expired } = res.data
           document.cookie = `hexVueWeek3Token=${token};expires=${new Date(
             expired
           )};`
-          this.$router.replace({ path: '/products' })
+          this.$router.push({ path: '/products' })
         })
         .catch((err) => {
-          // console.log(err.response);
           alert(err.response.data.message)
         })
     }
