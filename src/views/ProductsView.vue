@@ -129,6 +129,7 @@ export default {
         this.$refs.productModal.openModal()
       } else if (button === 'editBtn') {
         this.tempProduct = { ...product }
+        console.log(this.tempProduct)
         this.isNew = false
         this.$refs.productModal.openModal()
       } else if (button === 'deleteBtn') {

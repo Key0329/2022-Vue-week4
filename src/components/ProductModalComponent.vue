@@ -58,7 +58,7 @@
                       type="text"
                       class="form-control"
                       placeholder="請輸入圖片連結"
-                      @input="updateImage(key, $event.target.value)"
+                      v-model="this.product.imagesUrl[key]"
                     />
                   </div>
                   <img class="img-fluid" :src="img" :alt="'img' + key" />
@@ -326,9 +326,7 @@ export default {
     tempProduct: {
       handler(newVal) {
         this.product = {
-          ...newVal,
-          imagesUrl: [],
-          imageUrl: ''
+          ...newVal
         }
       },
       deep: true
