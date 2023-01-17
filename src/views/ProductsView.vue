@@ -54,27 +54,28 @@
   </div>
 
   <!-- Modal start-->
-  <div
-    id="productModal"
-    ref="productModal"
-    class="modal fade"
-    tabindex="-1"
-    aria-labelledby="productModalLabel"
-    aria-hidden="true"
-  >
-    <product-modal-component
-      :is-new="isNew"
-      v-model:title="tempProduct.title"
-      v-model:category="tempProduct.category"
-      v-model:content="tempProduct.content"
-      v-model:description="tempProduct.description"
-      v-model:images-url="tempProduct.imagesUrl"
-      v-model:num="tempProduct.num"
-      v-model:origin_price="tempProduct.origin_price"
-      v-model:price="tempProduct.price"
-    ></product-modal-component>
-  </div>
 
+  <product-modal-component
+    ref="productModal"
+    :is-new="isNew"
+    :images-url="tempProduct.imagesUrl"
+    :temp-product="tempProduct"
+    v-model:title="tempProduct.title"
+    v-model:category="tempProduct.category"
+    v-model:content="tempProduct.content"
+    v-model:description="tempProduct.description"
+    v-model:image-url="tempProduct.imageUrl"
+    v-model:num="tempProduct.num"
+    v-model:origin_price="tempProduct.origin_price"
+    v-model:price="tempProduct.price"
+    v-model:unit="tempProduct.unit"
+    v-model:is_enabled="tempProduct.is_enabled"
+    @emit-add-image="addImage"
+    @emit-create-image="createImage"
+    @emit-delete-image="deleteImage"
+    @emit-images-url-update="updateImagesUrl"
+  ></product-modal-component>
+  <!-- @emit-images-url-input="updateImagesUrl" -->
   <div
     id="delProductModal"
     ref="delProductModal"
@@ -120,12 +121,8 @@
 </template>
 
 <script>
-import modal from 'bootstrap/js/dist/modal'
 import PaginationComponent from '../components/PaginationComponent.vue'
 import ProductModalComponent from '../components/ProductModalComponent.vue'
-
-let productModal = null
-let delProductModal = null
 
 export default {
   data() {
@@ -134,6 +131,7 @@ export default {
       apiPath: 'key0329',
       products: [],
       tempProduct: {
+        imageUrl: '',
         imagesUrl: []
       },
       isNew: false,
@@ -151,11 +149,6 @@ export default {
     )
     this.$http.defaults.headers.common.Authorization = token
     this.checkAdmin()
-
-    // eslint-disable-next-line new-cap
-    productModal = new modal(document.querySelector('#productModal'))
-    // eslint-disable-next-line new-cap
-    delProductModal = new modal(document.querySelector('#delProductModal'))
   },
   methods: {
     checkAdmin() {
@@ -181,23 +174,6 @@ export default {
           alert(err)
         })
     },
-    modelHandler(button, item) {
-      if (button === 'createBtn') {
-        this.tempProduct = {
-          imagesUrl: []
-        }
-        this.isNew = true
-        productModal.show()
-      } else if (button === 'editBtn') {
-        this.tempProduct = { ...item }
-        this.isNew = false
-        productModal.show()
-        console.log(this.tempProduct)
-      } else if (button === 'deleteBtn') {
-        this.tempProduct = { ...item }
-        delProductModal.show()
-      }
-    },
     addImage() {
       this.tempProduct.imagesUrl.push('')
     },
@@ -207,6 +183,22 @@ export default {
     createImage() {
       this.tempProduct.imagesUrl = []
       this.tempProduct.imagesUrl.push('')
+    },
+    modelHandler(button, product) {
+      if (button === 'createBtn') {
+        this.tempProduct = {
+          imagesUrl: []
+        }
+        this.isNew = true
+        this.$refs.productModal.openModal()
+      } else if (button === 'editBtn') {
+        this.tempProduct = { ...product }
+        this.isNew = false
+        this.$refs.productModal.openModal()
+      } else if (button === 'deleteBtn') {
+        this.tempProduct = { ...product }
+        // delProductModal.show()
+      }
     },
     addNewProduct() {
       const data = this.tempProduct
@@ -228,7 +220,7 @@ export default {
           .then((res) => {
             alert(res.data.message)
             this.getProductsData()
-            productModal.hide()
+            this.$refs.productModal.closeModal()
           })
           .catch((err) => {
             alert(err.data.message)
@@ -257,7 +249,7 @@ export default {
           .then((res) => {
             alert(res.data.message)
             this.getProductsData()
-            productModal.hide()
+            this.$refs.productModal.closeModal()
           })
           .catch((err) => {
             alert(err.data.message)
@@ -300,14 +292,20 @@ export default {
         .then((res) => {
           alert(res.data.message)
           this.getProductsData()
-          delProductModal.hide()
+          // delProductModal.hide()
         })
         .catch((err) => {
           alert(err.data.message)
         })
+    },
+    updateImagesUrl(key, e) {
+      console.log(key, e)
+      this.tempProduct.imagesUrl[key] = e
     }
   }
 }
 </script>
 
 <style scoped></style>
+
+<!-- 184.289 -->
