@@ -42,7 +42,10 @@
 <script>
 export default {
   props: {
-    pages: Object
+    pages: {
+      type: Object,
+      required: true
+    }
   },
   methods: {
     changePage(page) {

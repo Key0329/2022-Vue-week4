@@ -31,22 +31,25 @@
                     type="text"
                     class="form-control"
                     placeholder="請輸入圖片連結1"
-                    :value="imageUrl"
-                    @input="$emit('update:imageUrl', $event.target.value)"
+                    v-model="product.imageUrl"
                   />
                 </div>
                 <img
                   class="img-fluid"
-                  :src="imageUrl"
+                  :src="product.imageUrl"
                   alt="mainImg"
-                  v-if="imageUrl"
+                  v-if="product.imageUrl"
                 />
               </div>
               <!-- 多圖新增 -->
               <h3 class="mb-3">多圖新增</h3>
               <!-- 因為內層直接用 length 判斷會造成渲染錯誤，所以要多包一層 if 讓 imagesUrl 確定有東西才渲染 -->
-              <div v-if="Array.isArray(imagesUrl)">
-                <div class="mb-2" v-for="(img, key) in imagesUrl" :key="key">
+              <div v-if="Array.isArray(product.imagesUrl)">
+                <div
+                  class="mb-2"
+                  v-for="(img, key) in product.imagesUrl"
+                  :key="key"
+                >
                   <div class="mb-3">
                     <label for="imageUrl" class="form-label"
                       >輸入圖片網址</label
@@ -55,15 +58,17 @@
                       type="text"
                       class="form-control"
                       placeholder="請輸入圖片連結"
-                      :value="imagesUrl[key]"
-                      @input="imagesUrlUpdate(key, $event)"
+                      @input="updateImage(key, $event.target.value)"
                     />
                   </div>
                   <img class="img-fluid" :src="img" :alt="'img' + key" />
                 </div>
                 <!-- 判斷是否有陣列或是陣列最後一筆是否有值 -->
                 <div
-                  v-if="!imagesUrl.length || imagesUrl[imagesUrl.length - 1]"
+                  v-if="
+                    !product.imagesUrl.length ||
+                    product.imagesUrl[product.imagesUrl.length - 1]
+                  "
                 >
                   <button
                     class="btn btn-outline-primary btn-sm d-block w-100"
@@ -98,8 +103,7 @@
                   type="text"
                   class="form-control"
                   placeholder="請輸入標題"
-                  :value="product.title"
-                  @input="$emit('update:imageUrl', $event.target.value)"
+                  v-model="product.title"
                 />
               </div>
 
@@ -111,7 +115,7 @@
                     type="text"
                     class="form-control"
                     placeholder="請輸入分類"
-                    :value="category"
+                    v-model="product.category"
                   />
                 </div>
                 <div class="mb-3 col-md-6">
@@ -121,7 +125,7 @@
                     type="text"
                     class="form-control"
                     placeholder="請輸入單位"
-                    :value="unit"
+                    v-model="product.unit"
                   />
                 </div>
               </div>
@@ -135,7 +139,7 @@
                     min="0"
                     class="form-control"
                     placeholder="請輸入原價"
-                    :value="origin_price"
+                    v-model="product.origin_price"
                   />
                 </div>
                 <div class="mb-3 col-md-6">
@@ -146,7 +150,7 @@
                     min="0"
                     class="form-control"
                     placeholder="請輸入售價"
-                    :value="price"
+                    v-model="product.price"
                   />
                 </div>
               </div>
@@ -159,7 +163,7 @@
                   type="text"
                   class="form-control"
                   placeholder="請輸入產品描述"
-                  :value="description"
+                  v-model="product.description"
                 ></textarea>
               </div>
               <div class="mb-3">
@@ -169,7 +173,7 @@
                   type="text"
                   class="form-control"
                   placeholder="請輸入說明內容"
-                  :value="content"
+                  v-model="product.content"
                 ></textarea>
               </div>
               <div class="mb-3">
@@ -180,7 +184,7 @@
                     type="checkbox"
                     :true-value="1"
                     :false-value="0"
-                    :value="is_enabled"
+                    v-model="product.is_enabled"
                   />
                   <label class="form-check-label" for="is_enabled"
                     >是否啟用</label
@@ -215,61 +219,119 @@
 import Modal from 'bootstrap/js/dist/modal'
 
 export default {
-  props: [
-    'isNew',
-    'category',
-    'content',
-    'title',
-    'imageUrl',
-    'imagesUrl',
-    'description',
-    'num',
-    'origin_price',
-    'price',
-    'unit',
-    'is_enabled',
-    'tempProduct'
-  ],
+  // props: ['isNew', 'tempProduct'],
+  props: {
+    isNew: {
+      type: Boolean,
+      required: true
+    },
+    tempProduct: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
+      apiUrl: 'https://vue3-course-api.hexschool.io/v2',
+      apiPath: 'key0329',
       bsModal: '',
-      // product: {
-      //   category: this.category,
-      //   content: this.content,
-      //   title: this.title,
-      //   imageUrl: this.imageUrl,
-      //   imagesUrl: this.imagesUrl,
-      //   description: this.description,
-      //   num: this.num,
-      //   origin_price: this.origin_price,
-      //   price: this.price,
-      //   unit: this.unit,
-      //   is_enabled: this.is_enabled
-      // }
-      // product: JSON.parse(this.tempProduct)
-      product: { ...this.tempProduct }
+      product: {}
     }
   },
   methods: {
     openModal() {
       this.bsModal.show()
-      console.log(this.product)
     },
     closeModal() {
       this.bsModal.hide()
     },
     addImage() {
-      this.$emit('emit-add-image')
+      this.product.imagesUrl.push('')
     },
     createImage() {
-      this.$emit('emit-create-image')
+      this.product.imagesUrl = []
+      this.product.imagesUrl.push('')
     },
     deleteImage() {
-      this.$emit('emit-delete-image')
+      this.product.imagesUrl.pop()
     },
-    imagesUrlUpdate(key, $event) {
-      console.log($event.target.value)
-      this.$emit('emit-images-url-update', key, $event.target.value)
+    updateImage(key, e) {
+      this.product.imagesUrl[key] = e
+    },
+    addNewProduct() {
+      const data = this.product
+
+      if (
+        !this.product.title ||
+        !this.product.category ||
+        !this.product.unit ||
+        !this.product.price ||
+        !this.product.origin_price
+      ) {
+        alert('標題 / 分類 / 單位 / 原價 / 售價 為必填欄位')
+
+        // eslint-disable-next-line no-useless-return
+        return
+      } else {
+        this.$http
+          .post(`${this.apiUrl}/api/${this.apiPath}/admin/product`, { data })
+          .then((res) => {
+            alert(res.data.message)
+            this.$emit('get-products-data')
+            this.closeModal()
+          })
+          .catch((err) => {
+            alert(err.data.message)
+          })
+      }
+    },
+    updateProduct() {
+      const data = this.product
+      const id = this.product.id
+
+      if (
+        !this.product.title ||
+        !this.product.category ||
+        !this.product.unit ||
+        !this.product.price ||
+        !this.product.origin_price
+      ) {
+        alert('標題 / 分類 / 單位 / 原價 / 售價 為必填欄位')
+        // eslint-disable-next-line no-useless-return
+        return
+      } else {
+        this.$http
+          .put(`${this.apiUrl}/api/${this.apiPath}/admin/product/${id}`, {
+            data
+          })
+          .then((res) => {
+            alert(res.data.message)
+            this.$emit('get-products-data')
+            this.closeModal()
+          })
+          .catch((err) => {
+            alert(err.data.message)
+          })
+      }
+    },
+    updateProductHandler() {
+      if (this.isNew) {
+        this.addNewProduct()
+      } else {
+        this.updateProduct()
+      }
+    }
+  },
+  watch: {
+    tempProduct: {
+      handler(newVal) {
+        this.product = {
+          ...newVal,
+          imagesUrl: [],
+          imageUrl: ''
+        }
+      },
+      deep: true
     }
   },
   mounted() {
