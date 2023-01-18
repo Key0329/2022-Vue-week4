@@ -69,9 +69,9 @@
 </template>
 
 <script>
-import PaginationComponent from '../components/PaginationComponent.vue'
-import ProductModalComponent from '../components/ProductModalComponent.vue'
-import DeleteProductModalComponent from '../components/DeleteProductModalComponent.vue'
+import PaginationComponent from '../components/PaginationComponent/index.vue'
+import ProductModalComponent from '../components/ProductModalComponent/index.vue'
+import DeleteProductModalComponent from '../components/DeleteProductModalComponent/index.vue'
 
 export default {
   data() {
@@ -129,7 +129,6 @@ export default {
         this.$refs.productModal.openModal()
       } else if (button === 'editBtn') {
         this.tempProduct = { ...product }
-        console.log(this.tempProduct)
         this.isNew = false
         this.$refs.productModal.openModal()
       } else if (button === 'deleteBtn') {
