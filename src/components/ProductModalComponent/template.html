@@ -2,20 +2,37 @@
   aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content border-0">
+
+      <!-- header -->
       <div class="modal-header bg-dark text-white">
         <h5 id="productModalLabel" class="modal-title">
           <span>{{ isNew ? '新增產品' : '編輯產品' }}</span>
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
+      <!-- body -->
       <div class="modal-body">
         <div class="row">
           <div class="col-sm-4">
             <!-- 主要圖片 -->
+            <h3 class="mb-3">主要圖片</h3>
             <div class="mb-3">
               <div class="mb-3">
-                <label for="imageUrl" class="form-label">主要圖片</label>
-                <input type="text" class="form-control" placeholder="請輸入圖片連結1" v-model="product.imageUrl" />
+                <form class="mt-2" @submit.prevent="handleSubmit('main', 'null', $event)"
+                  action="https://vue3-course-api.hexschool.io/v2/api/key0329/admin/upload"
+                  enctype="multipart/form-data" method="post">
+                  <div v-if="!product.imageUrl" class="form-group mb-2">
+                    <label class="mb-2" for="uploadImageFile">上傳圖片</label>
+                    <input id="uploadImageFile" class="form-control mb-1" type="file" name="file-to-upload">
+                    <input class="form-control" type="submit" value="確認上傳">
+                  </div>
+                  <div class="form-group">
+                    <label v-if="!product.imageUrl" for="uploadImageUrl" class="form-label">或輸入圖片網址</label>
+                    <input type="text" id="uploadImageUrl" class="form-control" placeholder="請輸入圖片連結"
+                      v-model="product.imageUrl" />
+                  </div>
+                </form>
               </div>
               <img class="img-fluid" :src="product.imageUrl" alt="mainImg" v-if="product.imageUrl" />
             </div>
@@ -23,10 +40,22 @@
             <h3 class="mb-3">多圖新增</h3>
             <!-- 因為內層直接用 length 判斷會造成渲染錯誤，所以要多包一層 if 讓 imagesUrl 確定有東西才渲染 -->
             <div v-if="Array.isArray(product.imagesUrl)">
-              <div class="mb-2" v-for="(img, key) in product.imagesUrl" :key="key">
+              <div class="mb-4 pb-2 border-1 border-bottom" v-for="(img, key) in product.imagesUrl" :key="key">
                 <div class="mb-3">
-                  <label for="imageUrl" class="form-label">輸入圖片網址</label>
-                  <input type="text" class="form-control" placeholder="請輸入圖片連結" v-model="this.product.imagesUrl[key]" />
+                  <form class="mt-2" @submit.prevent="handleSubmit('multi',key, $event)"
+                    action="https://vue3-course-api.hexschool.io/v2/api/key0329/admin/upload"
+                    enctype="multipart/form-data" method="post">
+                    <div v-if="!product.imagesUrl[key]" class="form-group mb-2">
+                      <label class="mb-2" for="uploadImagesFile">上傳圖片</label>
+                      <input id="uploadImagesFile" class="form-control mb-1" type="file" name="file-to-upload">
+                      <input class="form-control" type="submit" value="確認上傳">
+                    </div>
+                    <div class="form-group">
+                      <label v-if="!product.imagesUrl[key]" for="uploadImagesUrl" class="form-label">或輸入圖片網址</label>
+                      <input type="text" id="uploadImagesUrl" class="form-control" placeholder="請輸入圖片連結"
+                        v-model="product.imagesUrl[key]" />
+                    </div>
+                  </form>
                 </div>
                 <img v-if="this.product.imagesUrl[key]" class="img-fluid" :src="img" :alt="'img' + key" />
               </div>
@@ -56,7 +85,6 @@
               <label for="title" class="form-label">標題</label>
               <input id="title" type="text" class="form-control" placeholder="請輸入標題" v-model="product.title" />
             </div>
-
             <div class="row">
               <div class="mb-3 col-md-6">
                 <label for="category" class="form-label">分類</label>
@@ -67,7 +95,6 @@
                 <input id="unit" type="text" class="form-control" placeholder="請輸入單位" v-model="product.unit" />
               </div>
             </div>
-
             <div class="row">
               <div class="mb-3 col-md-6">
                 <label for="origin_price" class="form-label">原價</label>
@@ -81,7 +108,6 @@
               </div>
             </div>
             <hr />
-
             <div class="mb-3">
               <label for="description" class="form-label">產品描述</label>
               <textarea id="description" type="text" class="form-control" placeholder="請輸入產品描述"
@@ -102,6 +128,8 @@
           </div>
         </div>
       </div>
+
+      <!-- footer -->
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
           取消
@@ -110,6 +138,7 @@
           確認
         </button>
       </div>
+
     </div>
   </div>
 </div>

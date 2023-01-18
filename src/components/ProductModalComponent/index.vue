@@ -103,6 +103,26 @@ export default {
       } else {
         this.updateProduct()
       }
+    },
+    handleSubmit(type, key, e) {
+      const form = new FormData(e.target)
+      this.sendFormData(type, key, form)
+    },
+    sendFormData(type, key, form) {
+      this.$http
+        .post(`${this.apiUrl}/api/${this.apiPath}/admin/upload`, form)
+        .then((res) => {
+          const url = res.data.imageUrl
+          if (type === 'multi') {
+            this.product.imagesUrl[key] = url
+          } else if (type === 'main') {
+            this.product.imageUrl = url
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+          alert(err.message)
+        })
     }
   },
   watch: {
