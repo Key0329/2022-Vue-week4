@@ -128,9 +128,7 @@ export default {
   watch: {
     tempProduct: {
       handler(newVal) {
-        this.product = {
-          ...newVal
-        }
+        this.product = JSON.parse(JSON.stringify(newVal))
       },
       deep: true
     }
