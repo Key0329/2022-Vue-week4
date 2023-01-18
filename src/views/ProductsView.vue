@@ -72,12 +72,12 @@
 import PaginationComponent from '../components/PaginationComponent/index.vue'
 import ProductModalComponent from '../components/ProductModalComponent/index.vue'
 import DeleteProductModalComponent from '../components/DeleteProductModalComponent/index.vue'
+const apiUrl = import.meta.env.VITE_URL
+const apiPath = import.meta.env.VITE_PATH
 
 export default {
   data() {
     return {
-      apiUrl: 'https://vue3-course-api.hexschool.io/v2',
-      apiPath: 'key0329',
       products: [],
       tempProduct: {},
       isNew: false,
@@ -101,7 +101,7 @@ export default {
   methods: {
     checkAdmin() {
       this.$http
-        .post(`${this.apiUrl}/api/user/check`)
+        .post(`${apiUrl}/api/user/check`)
         .then(() => {
           this.getProductsData()
         })
@@ -112,7 +112,7 @@ export default {
     },
     getProductsData(page = 1) {
       this.$http
-        .get(`${this.apiUrl}/api/${this.apiPath}/admin/products?page=${page}`)
+        .get(`${apiUrl}/api/${apiPath}/admin/products?page=${page}`)
         .then((res) => {
           this.products = res.data.products
           this.pages = res.data.pagination

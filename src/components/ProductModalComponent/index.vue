@@ -1,5 +1,7 @@
 <script>
 import Modal from 'bootstrap/js/dist/modal'
+const apiUrl = import.meta.env.VITE_URL
+const apiPath = import.meta.env.VITE_PATH
 
 export default {
   name: 'product-modal-component',
@@ -15,8 +17,6 @@ export default {
   },
   data() {
     return {
-      apiUrl: 'https://vue3-course-api.hexschool.io/v2',
-      apiPath: 'key0329',
       bsModal: '',
       product: {}
     }
@@ -57,7 +57,7 @@ export default {
         return
       } else {
         this.$http
-          .post(`${this.apiUrl}/api/${this.apiPath}/admin/product`, { data })
+          .post(`${apiUrl}/api/${apiPath}/admin/product`, { data })
           .then((res) => {
             alert(res.data.message)
             this.$emit('get-products-data')
@@ -84,7 +84,7 @@ export default {
         return
       } else {
         this.$http
-          .put(`${this.apiUrl}/api/${this.apiPath}/admin/product/${id}`, {
+          .put(`${apiUrl}/api/${apiPath}/admin/product/${id}`, {
             data
           })
           .then((res) => {
@@ -110,7 +110,7 @@ export default {
     },
     sendFormData(type, key, form) {
       this.$http
-        .post(`${this.apiUrl}/api/${this.apiPath}/admin/upload`, form)
+        .post(`${apiUrl}/api/${apiPath}/admin/upload`, form)
         .then((res) => {
           const url = res.data.imageUrl
           if (type === 'multi') {

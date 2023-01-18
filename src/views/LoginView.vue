@@ -38,20 +38,21 @@
 </template>
 
 <script>
+const apiUrl = import.meta.env.VITE_URL
+
 export default {
   data() {
     return {
       user: {
         username: '',
         password: ''
-      },
-      apiUrl: 'https://vue3-course-api.hexschool.io/v2'
+      }
     }
   },
   methods: {
     login() {
       this.$http
-        .post(`${this.apiUrl}/admin/signin`, this.user)
+        .post(`${apiUrl}/admin/signin`, this.user)
         .then((res) => {
           const { token, expired } = res.data
           document.cookie = `hexVueWeek3Token=${token};expires=${new Date(

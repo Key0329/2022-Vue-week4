@@ -1,5 +1,7 @@
 <script>
 import Modal from 'bootstrap/js/dist/modal'
+const apiUrl = import.meta.env.VITE_URL
+const apiPath = import.meta.env.VITE_PATH
 
 export default {
   name: 'delete-product-modal-component',
@@ -27,7 +29,7 @@ export default {
     deleteProduct() {
       const id = this.product.id
       this.$http
-        .delete(`${this.apiUrl}/api/${this.apiPath}/admin/product/${id}`)
+        .delete(`${apiUrl}/api/${apiPath}/admin/product/${id}`)
         .then((res) => {
           alert(res.data.message)
           this.$emit('get-products-data')
