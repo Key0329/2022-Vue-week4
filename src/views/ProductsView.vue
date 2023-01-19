@@ -99,6 +99,7 @@ export default {
     )
     this.$http.defaults.headers.common.Authorization = token
     this.checkAdmin()
+    console.log(this.$route.params)
   },
   methods: {
     checkAdmin() {
