@@ -12,6 +12,7 @@
           <th>產品名稱</th>
           <th width="120">原價</th>
           <th width="120">售價</th>
+          <th width="100">評價星級</th>
           <th width="100">是否啟用</th>
           <th width="120">編輯</th>
         </tr>
@@ -22,6 +23,7 @@
           <td>{{ product.title }}</td>
           <td class="text-start">NT$ {{ product.origin_price }}</td>
           <td class="text-start">NT$ {{ product.price }}</td>
+          <td class="text-center">{{ product.review }}</td>
           <td>
             <span v-if="product.is_enabled" class="text-success">啟用</span>
             <span v-else>未啟用</span>
