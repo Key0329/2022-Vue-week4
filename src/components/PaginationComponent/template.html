@@ -1,24 +1,26 @@
 <nav aria-label="Page navigation">
   <ul class="pagination">
     <li class="page-item">
-      <a @click.prevent="changePage(pages.current_page - 1)" class="page-link" :class="{ disabled: !pages.has_pre }"
-        href="#" aria-label="Previous">
+      <router-link :to="`/admin/products/${pages.current_page - 1}`"
+        @click.prevent="changePage(pages.current_page - 1, $event)" class="page-link"
+        :class="{ disabled: !pages.has_pre }" href="#" aria-label="Previous">
         <span aria-hidden="true">&laquo;</span>
-      </a>
+      </router-link>
     </li>
 
     <li v-for="page in pages.total_pages" :key="page + 'page'" class="page-item"
-      :class="{ 'active': page === pages.current_page, 'point-none': page === pages.current_page }">
-      <a @click.prevent="changePage(page)" class="page-link" href="#">{{
+      :class="{ 'point-none': page === pages.current_page }">
+      <router-link :to="'/admin/products/' + page" @click="changePage(page, $event)" class="page-link">{{
         page
-        }}</a>
+        }}</router-link>
     </li>
 
     <li class="page-item">
-      <a @click.prevent="changePage(pages.current_page + 1)" class="page-link" :class="{ disabled: !pages.has_next }"
-        href="#" aria-label="Next">
+      <router-link :to="`/admin/products/${pages.current_page + 1}`"
+        @click.prevent="changePage(pages.current_page + 1, $event)" class="page-link"
+        :class="{ disabled: !pages.has_next }" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>
-      </a>
+      </router-link>
     </li>
   </ul>
 </nav>

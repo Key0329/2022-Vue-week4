@@ -10,6 +10,7 @@
               class="form-control"
               id="username"
               placeholder="name@example.com"
+              autocomplete="username"
               required
               autofocus
               v-model.trim="user.username"
@@ -22,6 +23,7 @@
               class="form-control"
               id="password"
               placeholder="Password"
+              autocomplete="current-password"
               required
               v-model.trim="user.password"
             />
@@ -58,7 +60,7 @@ export default {
           document.cookie = `hexVueWeek3Token=${token};expires=${new Date(
             expired
           )};`
-          this.$router.push({ path: '/products' })
+          this.$router.push({ path: '/admin/products' })
         })
         .catch((err) => {
           alert(err.response.data.message)

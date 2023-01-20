@@ -109,11 +109,18 @@ export default {
           this.getProductsData()
         })
         .catch((err) => {
-          alert(err.data.message)
-          window.location = 'login.html'
+          console.log(err)
+          alert('登入失敗')
+          this.$router.push('/login')
         })
     },
-    getProductsData(page = 1) {
+    getProductsData(page = 1, e) {
+      const id = this.$route.params.id
+
+      if (!e) {
+        page = id
+      }
+
       this.$http
         .get(`${apiUrl}/api/${apiPath}/admin/products?page=${page}`)
         .then((res) => {

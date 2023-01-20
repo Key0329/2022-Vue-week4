@@ -8,8 +8,8 @@ export default {
     }
   },
   methods: {
-    changePage(page) {
-      this.$emit('getProductsData', page)
+    changePage(page, e) {
+      this.$emit('getProductsData', page, e)
     }
   }
 }
